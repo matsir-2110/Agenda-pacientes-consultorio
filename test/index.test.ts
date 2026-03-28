@@ -1,8 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { test, describe, it, expect } from 'vitest';
 import { Paciente } from '../src/index';
 
 describe('Test para probar CI', () => {
-    expect(1 + 1).toBe(2);
+    test('El testeo en CI anda', () => {
+        expect(1 + 1).toBe(2);
+    });
 });
 
 /*describe('Paciente', () => {
