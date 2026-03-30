@@ -10,7 +10,7 @@ export class Persona implements IEntidad {
     private _telefono: string;
     private _email: string;
 
-    constructor(id: string, nombre: string, apellido: string, dni: number, telefono: string, email: string) {
+    constructor(id: string, nombre: string, apellido: string, dni: number, telefono: string, email: string){
         this._id = id;
         this._nombre = nombre;
         this._apellido = apellido;
