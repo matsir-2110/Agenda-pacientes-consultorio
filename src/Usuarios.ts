@@ -18,7 +18,7 @@ export class Paciente extends Persona {
     ) {
         super(id, nombre, apellido, dni, telefono, email);
         this ._fechaNacimiento = fechaNacimiento;
-        // Composición: la FichaClinica pertenece al Paciente y se crea con él
+        
         this._fichaClinica = new FichaClinica(`ficha-${id}`, obraSocial);
     }
 
@@ -49,12 +49,12 @@ export class Paciente extends Persona {
 
 /* Odontologo */
 export type Especialidad =
-    | "Odontología General"
+    | "Odontologia General"
     | "Ortodoncia"
     | "Endodoncia"
     | "Periodoncia"
-    | "Implantología"
-    | "Odontopediatría";
+    | "Implantologia"
+    | "Odontopediatria";
 
 export class Odontologo extends Persona {
     private _matricula: string;

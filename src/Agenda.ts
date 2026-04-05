@@ -71,6 +71,10 @@ export class Agenda {
         this._turnos = [];
     }
 
+    get turnos(): Turno[] {
+        return this._turnos;
+    }
+
     agregarTurno(nuevoTurno: Turno): void {
         //El doctor esta ocupado?
         for (const t of this._turnos) {

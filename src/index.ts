@@ -11,3 +11,5 @@ export { AntecedenteMedico, Tratamiento, FichaClinica } from "./Clinica";
 export type { EstadoTratamiento } from "./Clinica";
 
 //Agenda
+export { Turno, Agenda } from "./Agenda";
+export type { EstadoTurno } from "./Agenda";
