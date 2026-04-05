@@ -85,11 +85,14 @@ describe("Agenda para odontólogo test main", () => {
             expect(turno1.estado).toBe("cancelado");
             
             const turno2 = new Turno("t2", paciente, odontologo, fecha, "Consulta nueva");
-            expect(agenda.turnos).toHaveLength(2);
-            expect(agenda.turnos).toContain(turno2);
+            const todosLosTurnos = agenda.turnos;
+            expect(todosLosTurnos.length).toBe(2);
+            expect(todosLosTurnos).toContain(turno2);
 
-            expect(agenda.turnos[0]?.id).toBe("t1");
-            expect(agenda.turnos[0]?.estado).toBe("cancelado");
+            expect(todosLosTurnos[0]?.id).toBe("t1");
+            expect(todosLosTurnos[0]?.estado).toBe("cancelado");
+            expect(todosLosTurnos[1]?.id).toBe("t2");
+            expect(todosLosTurnos[1]?.estado).toBe("programado");
         });
     });
 
