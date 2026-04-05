@@ -23,12 +23,12 @@ describe("Agenda para odontólogo test main", () => {
 
     //Test Ficha Clínica
     describe("Ficha Clínica y Paciente", () => {
-        it("debería crear una ficha automáticamente al crear un paciente", () => {
+        it("crear una ficha automáticamente al crear un paciente", () => {
             expect(paciente.fichaClinica).toBeDefined();
             expect(paciente.fichaClinica.id).toBe("ficha-p1");
         });
 
-        it("no debería permitir duplicar tratamientos por ID", () => {
+        it("no debe permitir duplicar tratamientos por ID", () => {
             const t1 = new Tratamiento("t1", "Limpieza", "Limpieza profunda", 5000);
             paciente.fichaClinica.agregarTratamiento(t1);
             
@@ -37,16 +37,25 @@ describe("Agenda para odontólogo test main", () => {
             }).toThrow(/ya existe/);
         });
 
-        it("debería calcular la edad correctamente", () => {
+        it("calcular la edad correctamente", () => {
             //(Teniendo en cuenta que estamos en abril)
             expect(paciente.edad).toBe(20);
+        });
+
+        it("agregar antecedentes médicos a la ficha del paciente", () => {
+            const antecedente = new AntecedenteMedico("ant-1", "Alérgico a la Penicilina");
+            
+            paciente.fichaClinica.agregarAntecedente(antecedente);
+            
+            expect(paciente.fichaClinica.antecedentes).toHaveLength(1);
+            expect(paciente.fichaClinica.antecedentes[0]!.descripcion).toBe("Alérgico a la Penicilina");
         });
     });
 
 
     //Test Agenda
     describe("Gestión de Turnos", () => {
-        it("debería agregar un turno correctamente", () => {
+        it("agregar un turno correctamente", () => {
             const fecha = new Date("2026-05-10T10:00:00");
             const turno = new Turno("tr1", paciente, odontologo, fecha, "Extracción");
             
@@ -54,7 +63,7 @@ describe("Agenda para odontólogo test main", () => {
             expect(agenda.turnos).toHaveLength(1);
         });
 
-        it("debería bloquear turnos en el mismo horario para el mismo odontólogo", () => {
+        it("bloquear turnos en el mismo horario para el mismo odontólogo", () => {
             const fecha = new Date("2026-05-10T10:00:00");
             const turno1 = new Turno("tr1", paciente, odontologo, fecha, "Consulta");
             const turno2 = new Turno("tr2", paciente, odontologo, fecha, "Urgencia");
@@ -66,7 +75,7 @@ describe("Agenda para odontólogo test main", () => {
             }).toThrow(/ya tiene un turno/);
         });
 
-        it("debería filtrar turnos por paciente correctamente", () => {
+        it("filtrar turnos por paciente correctamente", () => {
             const fecha = new Date("2026-05-10T10:00:00");
             const t1 = new Turno("tr1", paciente, odontologo, fecha, "C1");
             agenda.agregarTurno(t1);
@@ -76,7 +85,7 @@ describe("Agenda para odontólogo test main", () => {
             expect(misTurnos[0]?.paciente.nombre).toBe("Máximo");
         });
 
-        it("debería permitir agendar en un horario de un turno previamente cancelado", () => {
+        it("permitir agendar en un horario de un turno previamente cancelado", () => {
             const fecha = new Date("2026-06-01T10:00:00");
             const turno1 = new Turno("t1", paciente, odontologo, fecha, "Consulta");
             agenda.agregarTurno(turno1);
@@ -95,12 +104,33 @@ describe("Agenda para odontólogo test main", () => {
             expect(todosLosTurnos[1]!.id).toBe("t2");
             expect(todosLosTurnos[1]!.estado).toBe("programado");
         });
+
+        it("filtrar los turnos por una fecha específica (día completo)", () => {
+            const fecha1 = new Date("2026-10-21T10:00:00");
+            const fecha2 = new Date("2026-10-21T15:00:00");
+            const fechaDistinta = new Date("2026-10-22T10:00:00");
+
+            const t1 = new Turno("t1", paciente, odontologo, fecha1, "Consulta A");
+            const t2 = new Turno("t2", paciente, odontologo, fecha2, "Consulta B");
+            const t3 = new Turno("t3", paciente, odontologo, fechaDistinta, "Consulta C");
+
+            agenda.agregarTurno(t1);
+            agenda.agregarTurno(t2);
+            agenda.agregarTurno(t3);
+
+            // Buscamos solo los del 21 de octubre
+            const turnosDelDia = agenda.obtenerTurnosPorFecha(new Date("2026-10-21T10:00:00"));
+            
+            expect(turnosDelDia).toHaveLength(2);
+            expect(turnosDelDia[0]!.id).toBe("t1");
+            expect(turnosDelDia[1]!.id).toBe("t2");
+        });
     });
 
 
     //Test Tatamientos
-    describe("Ciclo de Vida del Tratamiento", () => {
-        it("debería cambiar de estado 'pendiente' a 'en_progreso'", () => {
+    describe("Tratamientos", () => {
+        it("cambiar de estado 'pendiente' a 'en_progreso'", () => {
             const t = new Tratamiento("t1", "Conducto", "Caries muy profundas", 20000);
             expect(t.estado).toBe("pendiente");
             
@@ -108,7 +138,7 @@ describe("Agenda para odontólogo test main", () => {
             expect(t.estado).toBe("en_progreso");
         });
 
-        it("debería registrar la fecha de fin al completar un tratamiento", () => {
+        it("registrar la fecha de fin al completar un tratamiento", () => {
             const t = new Tratamiento("t1", "Conducto", "Caries muy profundas", 20000);
             t.avanzarEstado(); // a "en_progreso"
             t.avanzarEstado(); // a "completado"
@@ -117,7 +147,7 @@ describe("Agenda para odontólogo test main", () => {
             expect(t.fechaFin).toBeInstanceOf(Date);
         });
 
-        it("no debería permitir cancelar un tratamiento ya completado", () => {
+        it("no debe permitir cancelar un tratamiento ya completado", () => {
             const t = new Tratamiento("t1", "Limpieza", "Mucho zarro acumulado", 50000);
             t.avanzarEstado(); // en_progreso
             t.avanzarEstado(); // completado
@@ -125,9 +155,14 @@ describe("Agenda para odontólogo test main", () => {
             expect(() => t.cancelar()).toThrow(/No se puede cancelar/);
         });
 
-        it("debería lanzar error al buscar un tratamiento que no existe", () => {
+        it("buscar tratamiento", () => {
+            expect(() => paciente.fichaClinica.buscarTratamiento("t1")).toBeTruthy;
+        });
+
+        it("tira error al buscar un tratamiento que no existe", () => {
             expect(() => paciente.fichaClinica.buscarTratamiento("id-fantasma")).toThrow(/No existe/);
         });
+
     });
     
 });

@@ -76,8 +76,16 @@ export class Odontologo extends Persona {
         this._especialidad = especialidad;
     }
  
-    get matricula(): string { return this._matricula; }
-    get especialidad(): Especialidad { return this._especialidad; }
+    get matricula(): string{ 
+        return this._matricula; 
+    }
+
+    get especialidad(): Especialidad{ 
+        return this._especialidad; 
+    }
  
-    set especialidad(valor: Especialidad) { this._especialidad = valor; }
+    set especialidad(valor: Especialidad){ 
+        this._especialidad = valor; 
+    }
+    
 }
