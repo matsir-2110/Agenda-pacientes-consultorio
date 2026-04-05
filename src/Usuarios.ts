@@ -1,9 +1,10 @@
 import { Persona } from "./Entidades";
-
+import { FichaClinica } from "./Clinica";
 
 /* Paciente */
 export class Paciente extends Persona {
     private _fechaNacimiento: Date;
+    private _fichaClinica: FichaClinica;
 
     constructor(
         id: string, 
@@ -17,10 +18,16 @@ export class Paciente extends Persona {
     ) {
         super(id, nombre, apellido, dni, telefono, email);
         this ._fechaNacimiento = fechaNacimiento;
+        // Composición: la FichaClinica pertenece al Paciente y se crea con él
+        this._fichaClinica = new FichaClinica(`ficha-${id}`, obraSocial);
     }
 
-     get fechaNacimiento(): Date{
+    get fechaNacimiento(): Date{
         return this._fechaNacimiento;
+    }
+
+    get fichaClinica(): FichaClinica{ 
+        return this._fichaClinica; 
     }
 
     set fechaNacimiento(valor: Date){
